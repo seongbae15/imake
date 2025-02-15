@@ -32,7 +32,7 @@ export function PostCard({ postId, avatarSrc, title, author, category, timeAgo }
         </CardHeader>
         <CardFooter className="flex justify-end">
           <Button variant="link" asChild>
-            <Link to={`/community/${postId}`}>Reply &rarr;</Link>
+            Reply &rarr;
           </Button>
         </CardFooter>
       </Card>
