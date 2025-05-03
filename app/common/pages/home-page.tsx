@@ -3,6 +3,15 @@ import { ProductCard } from "../../features/product/components/product-card";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router";
 import { PostCard } from "../../features/community/components/post-card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { DotIcon, EyeIcon, HeartIcon } from "lucide-react";
+import { IdeaCard } from "../../features/ideas/components/idea-card";
 
 export const meta: MetaFunction = () => {
   return [
@@ -54,12 +63,37 @@ export default function HomePage() {
         </div>
         {Array.from({ length: 10 }).map((_, index) => (
           <PostCard
+            key={index}
             id={`postId-${index}`}
             title="What is the best productivity tool?"
             author="Seongbae"
             avatarUrl="https://github.com/apple.png"
             category="Productivity"
             timeAgo="12 hours ago"
+          />
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-5xl font-bold leading-tight tracking-tight">
+            IdeasGPT
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            Find ideas for your next project.
+          </p>
+          <Button variant={"link"} asChild className="text-lg p-0">
+            <Link to="/products/leaderboards">Explore all ideas &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <IdeaCard
+            key={index}
+            id="ideaId"
+            title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business."
+            views={123}
+            timeAgo="12 hours ago"
+            likes={123}
+            claimed={index % 2 === 0}
           />
         ))}
       </div>

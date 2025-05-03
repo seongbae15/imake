@@ -11,6 +11,7 @@ import {
   AvatarImage,
 } from "../../../common/components/ui/avatar";
 import { Button } from "../../../common/components/ui/button";
+import { DotIcon } from "lucide-react";
 
 interface PostCardProps {
   id: string;
@@ -44,14 +45,13 @@ export function PostCard({
             <div className="flex gap-2 text-sm leading-tight text-muted-foreground">
               <span>{author}</span>
               <span>{category}</span>
+              <DotIcon className="w-4 h-4" />
               <span>{timeAgo}</span>
             </div>
           </div>
         </CardHeader>
         <CardFooter className="flex justify-end">
-          <Button variant={"link"} asChild>
-            <Link to={`/community/${id}`}>Reply &rarr;</Link>
-          </Button>
+          <Button variant={"secondary"}>Reply &rarr;</Button>
         </CardFooter>
       </Card>
     </Link>
