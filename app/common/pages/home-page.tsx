@@ -14,6 +14,8 @@ import { DotIcon, EyeIcon, HeartIcon } from "lucide-react";
 import { IdeaCard } from "../../features/ideas/components/idea-card";
 import { Badge } from "../components/ui/badge";
 import { JobCard } from "../../features/jobs/components/job-card";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { TeamCard } from "../../features/teams/components/team-card";
 
 export const meta: MetaFunction = () => {
   return [
@@ -58,9 +60,7 @@ export default function HomePage() {
             The latest discussions made by our community.
           </p>
           <Button variant={"link"} asChild className="text-lg p-0">
-            <Link to="/products/leaderboards">
-              Explore all discussions &rarr;
-            </Link>
+            <Link to="/community">Explore all discussions &rarr;</Link>
           </Button>
         </div>
         {Array.from({ length: 10 }).map((_, index) => (
@@ -84,7 +84,7 @@ export default function HomePage() {
             Find ideas for your next project.
           </p>
           <Button variant={"link"} asChild className="text-lg p-0">
-            <Link to="/products/leaderboards">Explore all ideas &rarr;</Link>
+            <Link to="/ideas">Explore all ideas &rarr;</Link>
           </Button>
         </div>
         {Array.from({ length: 10 }).map((_, index) => (
@@ -108,11 +108,12 @@ export default function HomePage() {
             Find your dream job.
           </p>
           <Button variant={"link"} asChild className="text-lg p-0">
-            <Link to="/products/leaderboards">Explore all jobs &rarr;</Link>
+            <Link to="/jobs">Explore all jobs &rarr;</Link>
           </Button>
         </div>
         {Array.from({ length: 10 }).map((_, index) => (
           <JobCard
+            key={index}
             id="jobId"
             companyName="Tesla"
             companyLogo="https://github.com/teslamotors.png"
@@ -122,6 +123,30 @@ export default function HomePage() {
             locationType="Remote"
             salaryRange="$100,000 - $120,000"
             location="San Francisco, CA"
+          />
+        ))}
+      </div>
+      <div className="grid grid-cols-4 gap-4">
+        <div>
+          <h2 className="text-5xl font-bold leading-tight tracking-tight">
+            Find a team mate
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            Join a team looking for a new member.
+          </p>
+          <Button variant={"link"} asChild className="text-lg p-0">
+            <Link to="/teams">Explore all teams &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 6 }).map((_, index) => (
+          <TeamCard
+            key={index}
+            id={`teamId-${index}`}
+            username="seongbae"
+            avatarUrl="https://github.com/seongbae15.png"
+            avatarFallback="SB"
+            roles={["AI Engineer", "Backend Engineer", "Product Manager"]}
+            projectDescription="a new interactive media platform"
           />
         ))}
       </div>
