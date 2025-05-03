@@ -12,6 +12,8 @@ import {
 } from "../components/ui/card";
 import { DotIcon, EyeIcon, HeartIcon } from "lucide-react";
 import { IdeaCard } from "../../features/ideas/components/idea-card";
+import { Badge } from "../components/ui/badge";
+import { JobCard } from "../../features/jobs/components/job-card";
 
 export const meta: MetaFunction = () => {
   return [
@@ -94,6 +96,32 @@ export default function HomePage() {
             timeAgo="12 hours ago"
             likes={123}
             claimed={index % 2 === 0}
+          />
+        ))}
+      </div>
+      <div className="grid grid-cols-4 gap-4">
+        <div>
+          <h2 className="text-5xl font-bold leading-tight tracking-tight">
+            Latest Jobs
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            Find your dream job.
+          </p>
+          <Button variant={"link"} asChild className="text-lg p-0">
+            <Link to="/products/leaderboards">Explore all jobs &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <JobCard
+            id="jobId"
+            companyName="Tesla"
+            companyLogo="https://github.com/teslamotors.png"
+            title="Software Engineer"
+            timeAgo="12 hours ago"
+            employmentType="Full Time"
+            locationType="Remote"
+            salaryRange="$100,000 - $120,000"
+            location="San Francisco, CA"
           />
         ))}
       </div>
