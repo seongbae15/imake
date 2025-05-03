@@ -2,6 +2,8 @@ import type { MetaFunction } from "react-router";
 import { ProductCard } from "../../features/product/components/product-card";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router";
+import { PostCard } from "../../features/community/components/post-card";
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Home | iMake" },
@@ -11,7 +13,7 @@ export const meta: MetaFunction = () => {
 
 export default function HomePage() {
   return (
-    <div className="px-20">
+    <div className="px-20 space-y-40">
       <div className="grid grid-cols-3 gap-4">
         <div>
           <h2 className="text-5xl font-bold leading-tight tracking-tight">
@@ -27,12 +29,37 @@ export default function HomePage() {
         {Array.from({ length: 10 }).map((_, index) => (
           <ProductCard
             key={index}
-            id="productId"
+            id={`productId-${index}`}
             name="Product Name"
             description="Product Description"
             commentCount={12}
             viewCount={12}
             upvoteCount={120}
+          />
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <h2 className="text-5xl font-bold leading-tight tracking-tight">
+            Latest Discussions
+          </h2>
+          <p className="text-xl font-light text-foreground">
+            The latest discussions made by our community.
+          </p>
+          <Button variant={"link"} asChild className="text-lg p-0">
+            <Link to="/products/leaderboards">
+              Explore all discussions &rarr;
+            </Link>
+          </Button>
+        </div>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <PostCard
+            id={`postId-${index}`}
+            title="What is the best productivity tool?"
+            author="Seongbae"
+            avatarUrl="https://github.com/apple.png"
+            category="Productivity"
+            timeAgo="12 hours ago"
           />
         ))}
       </div>
