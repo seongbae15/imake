@@ -8,10 +8,6 @@ import { JobCard } from "../../features/jobs/components/job-card";
 import { TeamCard } from "../../features/teams/components/team-card";
 import type { Route } from "./+types/home-page";
 
-export function loader({ request }: Route.LoaderArgs) {
-  return {};
-}
-
 export function action({ request }: Route.ActionArgs) {
   return {};
 }
@@ -23,7 +19,7 @@ export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   ];
 };
 
-export default function HomePage({ loaderData }: Route.ComponentProps) {
+export default function HomePage() {
   return (
     <div className="px-20 space-y-40">
       <div className="grid grid-cols-3 gap-4">
