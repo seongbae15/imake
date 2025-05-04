@@ -1,23 +1,12 @@
 import type { MetaFunction } from "react-router";
-import type { Route } from "./+types/app/common/pages/home-page";
-import type { Router } from "@react-router/dev/routes";
 import { ProductCard } from "../../features/products/components/product-card";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router";
 import { PostCard } from "../../features/community/components/post-card";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { DotIcon, EyeIcon, HeartIcon } from "lucide-react";
 import { IdeaCard } from "../../features/ideas/components/idea-card";
-import { Badge } from "../components/ui/badge";
 import { JobCard } from "../../features/jobs/components/job-card";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { TeamCard } from "../../features/teams/components/team-card";
+import type { Route } from "./+types/home-page";
 
 export function loader({ request }: Route.LoaderArgs) {
   return {};
@@ -34,9 +23,7 @@ export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   ];
 };
 
-export default function HomePage({
-  loaderData,
-}: Router.ComponentProps<Route.Return>) {
+export default function HomePage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="px-20 space-y-40">
       <div className="grid grid-cols-3 gap-4">
