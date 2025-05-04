@@ -1,4 +1,6 @@
 import type { MetaFunction } from "react-router";
+import type { Route } from "./+types/app/common/pages/home-page";
+import type { Router } from "@react-router/dev/routes";
 import { ProductCard } from "../../features/products/components/product-card";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router";
@@ -17,14 +19,24 @@ import { JobCard } from "../../features/jobs/components/job-card";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { TeamCard } from "../../features/teams/components/team-card";
 
-export const meta: MetaFunction = () => {
+export function loader({ request }: Route.LoaderArgs) {
+  return {};
+}
+
+export function action({ request }: Route.ActionArgs) {
+  return {};
+}
+
+export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
-    { title: "Home | iMake" },
-    { name: "description", content: "Welcome to iMake" },
+    { title: "Home Page" },
+    { name: "description", content: "Welcome to our site!" },
   ];
 };
 
-export default function HomePage() {
+export default function HomePage({
+  loaderData,
+}: Router.ComponentProps<Route.Return>) {
   return (
     <div className="px-20 space-y-40">
       <div className="grid grid-cols-3 gap-4">
