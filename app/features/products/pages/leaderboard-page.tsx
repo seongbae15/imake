@@ -3,6 +3,7 @@ import type { Route } from "./+types/leaderboard-page";
 import { ProductCard } from "~/features/products/components/product-card";
 import { Button } from "~/common/components/ui/button";
 import { Link } from "react-router";
+import { DateTime } from "luxon";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -12,6 +13,9 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export default function LeaderboardPage() {
+  const today = DateTime.now().setZone("Asia/Seoul");
+  const dailyPath = `/products/leaderboards/daily/${today.year}/${today.month}/${today.day}`;
+
   return (
     <div className="space-y-20">
       <Hero
@@ -39,9 +43,7 @@ export default function LeaderboardPage() {
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
-          <Link to="/products/leaderboards/daily">
-            Explore all products &rarr;
-          </Link>
+          <Link to={dailyPath}>Explore all products &rarr;</Link>
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-4">
