@@ -29,7 +29,7 @@ export function action({ request }: Route.ActionArgs) {
 
 export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
-    { title: "Home Page" },
+    { title: "Home | iMake" },
     { name: "description", content: "Welcome to our site!" },
   ];
 };
