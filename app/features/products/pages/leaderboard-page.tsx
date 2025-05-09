@@ -15,6 +15,9 @@ export const meta: Route.MetaFunction = () => {
 export default function LeaderboardPage() {
   const today = DateTime.now().setZone("Asia/Seoul");
   const dailyPath = `/products/leaderboards/daily/${today.year}/${today.month}/${today.day}`;
+  const weeklyPath = `/products/leaderboards/weekly/${today.year}/${today.weekNumber}`;
+  const monthlyPath = `/products/leaderboards/monthly/${today.year}/${today.month}`;
+  const yearlyPath = `/products/leaderboards/yearly/${today.year}`;
 
   return (
     <div className="space-y-20">
@@ -67,9 +70,7 @@ export default function LeaderboardPage() {
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
-          <Link to="/products/leaderboards/weekly">
-            Explore all products &rarr;
-          </Link>
+          <Link to={weeklyPath}>Explore all products &rarr;</Link>
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-4">
@@ -93,9 +94,7 @@ export default function LeaderboardPage() {
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
-          <Link to="/products/leaderboards/monthly">
-            Explore all products &rarr;
-          </Link>
+          <Link to={monthlyPath}>Explore all products &rarr;</Link>
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-4">
@@ -119,9 +118,7 @@ export default function LeaderboardPage() {
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
-          <Link to="/products/leaderboards/yearly">
-            Explore all products &rarr;
-          </Link>
+          <Link to={yearlyPath}>Explore all products &rarr;</Link>
         </Button>
       </div>
     </div>
