@@ -1,36 +1,63 @@
-import type { MetaFunction } from "react-router";
-import type { Route } from "./+types/app/features/products/pages/search-page";
-import type { Router } from "@react-router/dev/routes";
+import { Hero } from "~/common/components/hero";
+import type { Route } from "./+types/search-page";
+import { z } from "zod";
+import { ProductCard } from "../components/product-card";
+import ProductPagination from "~/common/components/product-pagination";
+import { Form } from "react-router";
+import { Input } from "~/common/components/ui/input";
+import { Button } from "~/common/components/ui/button";
 
-export function loader({ request }: Route.LoaderArgs) {
-  const url = new URL(request.url);
-  const query = url.searchParams.get("q") || "";
-  // Fetch search results based on query
-  return { query, results: [] }; // Example data
-}
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
-export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
+export const meta: Route.MetaFunction = () => {
   return [
-    { title: `Search Results for "${data?.query || ""}"` },
+    { title: "Search Products | iMake" },
     {
       name: "description",
-      content: `Search results for products matching "${data?.query || ""}".`,
+      content: "Search for products.",
     },
   ];
 };
 
-export default function SearchPage({
-  loaderData,
-}: Router.ComponentProps<Route.Return>) {
+const paramsSchema = z.object({
+  query: z.string().optional().default(""),
+  page: z.coerce.number().optional().default(1),
+});
+
+export function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const { success, data: parsedData } = paramsSchema.safeParse(
+    Object.fromEntries(url.searchParams)
+  );
+  if (!success) {
+    throw new Error("Invalid params");
+  }
+  return parsedData;
+}
+
+export default function SearchPage({ loaderData }: Route.ComponentProps) {
   return (
-    <div>
-      <h1>Search Results for "{loaderData.query}"</h1>
-      {/* Display search results here */}
-      {/* {loaderData.results.map(result => ...)} */}
+    <div className="space-y-10">
+      <Hero
+        title="Search"
+        description="Search for products by title or description"
+      />
+      <Form className="flex justify-center h-14 max-w-screen-sm items-center gap-2 mx-auto">
+        <Input name="query" placeholder="Search products" />
+        <Button type="submit">Search</Button>
+      </Form>
+      <div className="space-y-5 w-full max-w-screen-md mx-auto">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <ProductCard
+            key={index}
+            id={`productId-${index}`}
+            name="Product Name"
+            description="Product Description"
+            commentCount={12}
+            viewCount={12}
+            upvoteCount={120}
+          />
+        ))}
+        <ProductPagination totalPages={10} />
+      </div>
     </div>
   );
 }
