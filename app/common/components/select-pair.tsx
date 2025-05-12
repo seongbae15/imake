@@ -30,7 +30,7 @@ export default function SelectPair({
   return (
     <div className="space-y-2 flex flex-col">
       <Label
-        className="space-y-2 flex flex-col items-start"
+        className="space-y-2 flex flex-col w-full"
         onClick={() => setOpen(true)}
       >
         {label}
