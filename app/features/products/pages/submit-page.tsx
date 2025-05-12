@@ -6,6 +6,7 @@ import SelectPair from "~/common/components/select-pair";
 import { Label } from "~/common/components/ui/label";
 import { Input } from "~/common/components/ui/input";
 import { useState } from "react";
+import { Button } from "~/common/components/ui/button";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -79,6 +80,9 @@ export default function SubmitPage({ actionData }: Route.ComponentProps) {
               { label: "Development", value: "development" },
             ]}
           />
+          <Button type="submit" className="w-full" size="lg">
+            Submit
+          </Button>
         </div>
         <div className="flex flex-col space-y-2">
           <Label className="flex flex-col gap-1 items-baseline">
