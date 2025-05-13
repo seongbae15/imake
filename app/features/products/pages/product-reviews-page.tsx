@@ -1,36 +1,33 @@
-import type { Route } from "./+types/product-reviews-page";
+import { Button } from "~/common/components/ui/button";
+import { ReviewCard } from "../components/review-card";
 
-export function loader({ params }: Route.LoaderArgs) {
-  return {
-    productId: params.productId,
-  };
+export function meta() {
+  return [
+    { tittle: "Product Reviews | iMake" },
+    { name: "description", content: "Read and write product reviews" },
+  ];
 }
 
-export function meta(): Route.MetaFunction {
-  return {
-    title: "Product Reviews",
-    description: "View and read product reviews",
-  };
-}
-
-export default function ProductReviewsPage({
-  loaderData,
-}: Route.ComponentProps) {
+export default function ProductReviewsPage() {
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Product Reviews</h1>
-        <a
-          href={`/products/${loaderData.productId}/reviews/new`}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Write a Review
-        </a>
+    <div className="space-y-10 max-w-xl">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">10 Reviews</h2>
+        <Button variant={"secondary"}>Wrtie a review</Button>
       </div>
-      <div className="bg-white rounded-lg shadow p-6">
-        <p className="text-gray-600">
-          Reviews for Product ID: {loaderData.productId}
-        </p>
+      <div className="space-y-20">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <ReviewCard
+            author={{
+              name: "John Doe",
+              avatarUrl: "https://github.com/seongbae15.png",
+              avatarFallback: "N",
+            }}
+            rating={5}
+            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            createdAt="10 days ago"
+          />
+        ))}
       </div>
     </div>
   );
