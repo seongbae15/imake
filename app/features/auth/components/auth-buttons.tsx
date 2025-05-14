@@ -21,13 +21,13 @@ export default function AuthButtons() {
           </Link>
         </Button>
         <Button variant={"outline"} className="w-full" asChild>
-          <Link to="/auth/social/kakao/start">
+          <Link to="/auth/social/github/start">
             <GithubIcon className="h-4 w-4" />
             Github
           </Link>
         </Button>
         <Button variant={"outline"} className="w-full" asChild>
-          <Link to="/auth/social/kakao/start">
+          <Link to="/auth/otp/start">
             <LockIcon className="h-4 w-4" />
             OTP
           </Link>
