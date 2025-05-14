@@ -2,6 +2,7 @@ import { Button } from "~/common/components/ui/button";
 import type { Route } from "./+types/join-page";
 import { Form, Link } from "react-router";
 import InputPair from "~/common/components/input-pair";
+import AuthButtons from "../components/auth-buttons";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Join | iMake" }];
@@ -47,6 +48,7 @@ export default function JoinPage() {
             Join
           </Button>
         </Form>
+        <AuthButtons />
       </div>
     </div>
   );
