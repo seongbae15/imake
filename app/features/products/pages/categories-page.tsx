@@ -1,31 +1,31 @@
-import type { MetaFunction } from "react-router";
-import type { Route } from "./+types/app/features/products/pages/categories-page";
-import type { Router } from "@react-router/dev/routes";
+import type { Route } from "./+types/categories-page";
+import { Hero } from "~/common/components/hero";
+import { CategoryCard } from "../components/category-card";
 
-export function loader({ request }: Route.LoaderArgs) {
-  // Fetch categories data here
-  return { categories: [] }; // Example data
-}
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
-export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
+export const meta: Route.MetaFunction = () => {
   return [
-    { title: "Product Categories Page" },
-    { name: "description", content: "Browse products by category." },
+    { title: "Categories | ProductHunt Clone" },
+    {
+      name: "description",
+      content: "Browse products in the category.",
+    },
   ];
 };
 
-export default function CategoriesPage({
-  loaderData,
-}: Router.ComponentProps<Route.Return>) {
+export default function CategoryPage() {
   return (
-    <div>
-      <h1>Product Categories</h1>
-      {/* Display categories list here */}
-      {/* {loaderData.categories.map(category => ...)} */}
+    <div className="space-y-10">
+      <Hero title="Categories" description="Search for products by category" />
+      <div className="grid grid-cols-4 gap-10">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <CategoryCard
+            title="Category Name"
+            description="Category description"
+            href={`/products/categories/categoryId-${index}`}
+            key={`category-${index}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

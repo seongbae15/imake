@@ -1,0 +1,67 @@
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/common/components/ui/card";
+import type { Route } from "./+types/message-page";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "~/common/components/ui/avatar";
+import { MessageBubble } from "../components/message-bubble";
+import { Form } from "react-router";
+import { Textarea } from "~/common/components/ui/textarea";
+import { Button } from "~/common/components/ui/button";
+import { SendIcon } from "lucide-react";
+
+export const meta: Route.MetaFunction = () => {
+  return [{ title: "Message | iMake" }];
+};
+
+function MessagePage() {
+  return (
+    <div className="h-full flex flex-col justify-between">
+      <Card>
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar className="size-14">
+            <AvatarImage src="https://github.com/seongbae15.png" />"
+            <AvatarFallback>SB</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-0">
+            <CardTitle className="text-xl">Seongbae</CardTitle>
+            <CardDescription>2 days ago</CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
+      <div className="py-10 overflow-y-scroll flex flex-col justify-start h-full">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <MessageBubble
+            key={index}
+            avatarUrl="https://github.com/seongbae15.png"
+            avatarFallback="SB"
+            content="This is a message from seongbae in iMake, make sure to reply because if you don't, you will be punished"
+            isCurrentUser={index % 2 === 0}
+          />
+        ))}
+      </div>
+      <Card>
+        <CardHeader>
+          <Form className="relative flex justify-end itesm-center">
+            <Textarea
+              placeholder="Write a message..."
+              rows={2}
+              className="resize-none"
+            />
+            <Button type="submit" size={"icon"} className="absolute right-2">
+              <SendIcon className="size-4" />
+            </Button>
+          </Form>
+        </CardHeader>
+      </Card>
+    </div>
+  );
+}
+
+export default MessagePage;

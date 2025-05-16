@@ -87,8 +87,8 @@ const menus = [
         to: "/jobs?type=internship",
       },
       {
-        name: "Submit a Job",
-        description: "Submit a job to our community",
+        name: "Post a Job",
+        description: "Post a job to our community",
         to: "/jobs/submit",
       },
     ],
@@ -121,7 +121,7 @@ const menus = [
   },
   {
     name: "IdeasGPT",
-    to: "/ideasgpt",
+    to: "/ideas",
   },
   {
     name: "Teams",
@@ -135,7 +135,7 @@ const menus = [
       {
         name: "Create a Tema",
         description: "Create a team in our community",
-        to: "/teams/create",
+        to: "/teams/submit",
       },
     ],
   },
