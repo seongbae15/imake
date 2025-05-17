@@ -22,6 +22,13 @@
       "when": 1747474692913,
       "tag": "0002_easy_sabretooth",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1747475891993,
+      "tag": "0003_wet_black_bird",
+      "breakpoints": true
     }
   ]
 }
