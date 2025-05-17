@@ -43,8 +43,9 @@ export default function JobsPage() {
           <div className="flex flex-col items-start gap-2.5">
             <h4 className="text-sm text-muted-foreground font-bold">Type</h4>
             <div className="flex flex-wrap gap-2">
-              {JOB_TYPES.map((type) => (
+              {JOB_TYPES.map((type, index) => (
                 <Button
+                  key={index}
                   variant="outline"
                   onClick={() => onFilterClick("type", type.value)}
                   className={cn(
@@ -61,8 +62,9 @@ export default function JobsPage() {
               Location
             </h4>
             <div className="flex flex-wrap gap-2">
-              {LOCATION_TYPES.map((type) => (
+              {LOCATION_TYPES.map((type, index) => (
                 <Button
+                  key={index}
                   variant="outline"
                   onClick={() => onFilterClick("location", type.value)}
                   className={cn(
@@ -81,8 +83,9 @@ export default function JobsPage() {
               Salary Range
             </h4>
             <div className="flex flex-wrap gap-2">
-              {SALARY_RANGE.map((range) => (
+              {SALARY_RANGE.map((range, index) => (
                 <Button
+                  key={index}
                   variant="outline"
                   onClick={() => onFilterClick("salary", range)}
                   className={cn(
