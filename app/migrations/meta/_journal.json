@@ -15,6 +15,13 @@
       "when": 1747472208044,
       "tag": "0001_quick_tyger_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747474692913,
+      "tag": "0002_easy_sabretooth",
+      "breakpoints": true
     }
   ]
 }
