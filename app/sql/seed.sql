@@ -78,7 +78,7 @@ INSERT INTO team (product_name, team_size, equity_split, product_stage, roles, p
 VALUES
   ('DevTool Pro', 3, 30, 'mvp', 'Developer, Designer, Marketing', 'Developer productivity suite', NOW(), NOW()),
   ('DesignMaster', 2, 50, 'prototype', 'Designer, Developer', 'Design automation platform', NOW(), NOW()),
-  ('MarketGenius', 4, 25, 'product', 'Marketing, Sales, Developer, Designer', 'Marketing analytics platform', NOW(), NOW()),
+  ('MarketGenius', 4, 25, 'production', 'Marketing, Sales, Developer, Designer', 'Marketing analytics platform', NOW(), NOW()),
   ('CodeBuddy', 2, 50, 'idea', 'Developer, Product Manager', 'AI coding assistant', NOW(), NOW()),
   ('DataViz', 3, 33, 'mvp', 'Data Scientist, Developer, Designer', 'Data visualization tool', NOW(), NOW());
 
