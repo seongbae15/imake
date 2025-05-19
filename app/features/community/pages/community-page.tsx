@@ -105,7 +105,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                 id={post.post_id!}
                 title={post.title!}
                 author={post.author!}
-                avatarUrl={post.author_avatar!}
+                avatarUrl={post.author_avatar}
                 category={post.topic!}
                 timeAgo={post.created_at!}
                 voteCount={post.upvotes!}
