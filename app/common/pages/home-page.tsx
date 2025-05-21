@@ -7,11 +7,9 @@ import { IdeaCard } from "../../features/ideas/components/idea-card";
 import { JobCard } from "../../features/jobs/components/job-card";
 import { TeamCard } from "../../features/teams/components/team-card";
 import type { Route } from "./+types/home-page";
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
-
+import { getProductByDateRange } from "~/features/products/queries";
+import { DateTime } from "luxon";
+import { getPosts } from "~/features/community/queries";
 export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
     { title: "Home | iMake" },
@@ -19,7 +17,21 @@ export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   ];
 };
 
-export default function HomePage() {
+export const loader = async () => {
+  const products = await getProductByDateRange({
+    startDate: DateTime.now().startOf("day"),
+    endDate: DateTime.now().endOf("day"),
+    limit: 7,
+  });
+
+  const posts = await getPosts({
+    limit: 7,
+    sorting: "newest",
+  });
+  return { products, posts };
+};
+
+export default function HomePage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-40">
       <div className="grid grid-cols-3 gap-4">
@@ -34,15 +46,15 @@ export default function HomePage() {
             <Link to="/products/leaderboards">Explore all products &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.products.map((product, index) => (
           <ProductCard
-            key={index}
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
           />
         ))}
       </div>
@@ -58,15 +70,16 @@ export default function HomePage() {
             <Link to="/community">Explore all discussions &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.posts.map((post) => (
           <PostCard
-            key={index}
-            id={`postId-${index}`}
-            title="What is the best productivity tool?"
-            author="Seongbae"
-            avatarUrl="https://github.com/apple.png"
-            category="Productivity"
-            timeAgo="12 hours ago"
+            key={post.post_id}
+            id={post.post_id!}
+            title={post.title!}
+            author={post.author!}
+            avatarUrl={post.author_avatar}
+            category={post.topic!}
+            timeAgo={post.created_at!}
+            voteCount={post.upvotes!}
           />
         ))}
       </div>
@@ -130,7 +143,9 @@ export default function HomePage() {
             Join a team looking for a new member.
           </p>
           <Button variant={"link"} asChild className="text-lg p-0">
-            <Link to="/teams">Explore all teams &rarr;</Link>
+            <Link prefetch="viewport" to="/teams">
+              Explore all teams &rarr;
+            </Link>
           </Button>
         </div>
         {Array.from({ length: 6 }).map((_, index) => (

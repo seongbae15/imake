@@ -50,6 +50,20 @@
       "when": 1747556635490,
       "tag": "0006_robust_ken_ellis",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1747719155690,
+      "tag": "0007_sharp_jetstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1747810112336,
+      "tag": "0008_flaky_blackheart",
+      "breakpoints": true
     }
   ]
 }

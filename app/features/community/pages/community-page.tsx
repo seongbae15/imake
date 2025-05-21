@@ -6,18 +6,61 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "~/common/components/ui/dropdown-menu";
-import { Form, Link, useSearchParams } from "react-router";
+import { data, Form, Link, useSearchParams } from "react-router";
 import { ChevronDownIcon } from "lucide-react";
 import { SORT_OPTIONS, PERIOD_OPTIONS } from "../constant";
 import { Input } from "~/common/components/ui/input";
 import { Button } from "~/common/components/ui/button";
 import { PostCard } from "../components/post-card";
+import { getPosts, getTopics } from "../queries";
+import { z } from "zod";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Community | iMake" }];
 };
 
-export default function CommunityPage() {
+const searchParamsSchema = z.object({
+  sorting: z.enum(["newest", "popular"]).optional().default("newest"),
+  period: z
+    .enum(["all", "today", "week", "month", "year"])
+    .optional()
+    .default("all"),
+  keyword: z.string().optional(),
+  topic: z.string().optional(),
+});
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const url = new URL(request.url);
+  const { success, data: parseData } = searchParamsSchema.safeParse(
+    Object.fromEntries(url.searchParams)
+  );
+  if (!success) {
+    throw data(
+      {
+        error_code: "invalid_search_params",
+        message: "Invalid search params",
+      },
+      { status: 400 }
+    );
+  }
+  const [topics, posts] = await Promise.all([
+    getTopics(),
+    getPosts({
+      limit: 20,
+      sorting: parseData.sorting,
+      period: parseData.period,
+      keyword: parseData.keyword,
+      topic: parseData.topic,
+    }),
+  ]);
+  return { topics, posts };
+};
+
+export const clientLoader = async ({
+  serverLoader,
+}: Route.ClientLoaderArgs) => {};
+
+export default function CommunityPage({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const sorting = searchParams.get("sorting") || "newest";
   const period = searchParams.get("period") || "all";
@@ -82,7 +125,7 @@ export default function CommunityPage() {
               <Form className="w-2/3">
                 <Input
                   type="text"
-                  name="search"
+                  name="keyword"
                   placeholder="Search for discussions"
                 />
               </Form>
@@ -92,15 +135,16 @@ export default function CommunityPage() {
             </Button>
           </div>
           <div className="space-y-5">
-            {Array.from({ length: 11 }).map((_, index) => (
+            {loaderData.posts.map((post) => (
               <PostCard
-                key={`postId-${index}`}
-                id={`postId-${index}`}
-                title="What is the best productivity tool?"
-                author="Nico"
-                avatarUrl="https://github.com/apple.png"
-                category="Productivity"
-                timeAgo="12 hours ago"
+                key={post.post_id}
+                id={post.post_id!}
+                title={post.title!}
+                author={post.author!}
+                avatarUrl={post.author_avatar}
+                category={post.topic!}
+                timeAgo={post.created_at!}
+                voteCount={post.upvotes!}
                 expanded
               />
             ))}
@@ -111,17 +155,14 @@ export default function CommunityPage() {
             Topics
           </span>
           <div className="flex flex-col gap-2 items-start">
-            {[
-              "AI Tools",
-              "Design Tools",
-              "Dev Tools",
-              "Note Taking App",
-              "Productivity Tools",
-            ].map((category) => (
-              <Button asChild variant="link" className="pl-0" key={category}>
-                <Link key={category} to={`/community?topics=${category}`}>
-                  {category}
-                </Link>
+            {loaderData.topics.map((topic) => (
+              <Button
+                asChild
+                variant={"link"}
+                key={topic.slug}
+                className="pl-0"
+              >
+                <Link to={`/community?topics=${topic.slug}`}>{topic.name}</Link>
               </Button>
             ))}
           </div>

@@ -4,6 +4,7 @@ import { ProductCard } from "~/features/products/components/product-card";
 import { Button } from "~/common/components/ui/button";
 import { Link } from "react-router";
 import { DateTime } from "luxon";
+import { getProductByDateRange } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -12,7 +13,34 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export default function LeaderboardPage() {
+export const loader = async () => {
+  const [dailyProducts, weeklyProducts, monthlyProducts, yearlyProducts] =
+    await Promise.all([
+      getProductByDateRange({
+        startDate: DateTime.now().startOf("day"),
+        endDate: DateTime.now().endOf("day"),
+        limit: 7,
+      }),
+      getProductByDateRange({
+        startDate: DateTime.now().startOf("week"),
+        endDate: DateTime.now().endOf("week"),
+        limit: 7,
+      }),
+      getProductByDateRange({
+        startDate: DateTime.now().startOf("month"),
+        endDate: DateTime.now().endOf("month"),
+        limit: 7,
+      }),
+      getProductByDateRange({
+        startDate: DateTime.now().startOf("year"),
+        endDate: DateTime.now().endOf("year"),
+        limit: 7,
+      }),
+    ]);
+  return { dailyProducts, weeklyProducts, monthlyProducts, yearlyProducts };
+};
+
+export default function LeaderboardPage({ loaderData }: Route.ComponentProps) {
   const today = DateTime.now().setZone("Asia/Seoul");
   const dailyPath = `/products/leaderboards/daily/${today.year}/${today.month}/${today.day}`;
   const weeklyPath = `/products/leaderboards/weekly/${today.year}/${today.weekNumber}`;
@@ -34,15 +62,15 @@ export default function LeaderboardPage() {
             The most popular products on imake by day.
           </p>
         </div>
-        {Array.from({ length: 7 }).map((_, index) => (
+        {loaderData.dailyProducts.map((product) => (
           <ProductCard
-            key={index}
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id.toString()}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
@@ -58,15 +86,15 @@ export default function LeaderboardPage() {
             The most popular products on imake by week.
           </p>
         </div>
-        {Array.from({ length: 7 }).map((_, index) => (
+        {loaderData.weeklyProducts.map((product) => (
           <ProductCard
-            key={index}
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id.toString()}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
@@ -82,15 +110,15 @@ export default function LeaderboardPage() {
             The most popular products on imake by month.
           </p>
         </div>
-        {Array.from({ length: 7 }).map((_, index) => (
+        {loaderData.monthlyProducts.map((product) => (
           <ProductCard
-            key={index}
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id.toString()}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
@@ -106,15 +134,15 @@ export default function LeaderboardPage() {
             The most popular products on imake by year.
           </p>
         </div>
-        {Array.from({ length: 7 }).map((_, index) => (
+        {loaderData.yearlyProducts.map((product) => (
           <ProductCard
-            key={index}
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id.toString()}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
           />
         ))}
         <Button variant={"link"} asChild className="text-lg p-0 self-center">
