@@ -7,10 +7,8 @@ import { IdeaCard } from "../../features/ideas/components/idea-card";
 import { JobCard } from "../../features/jobs/components/job-card";
 import { TeamCard } from "../../features/teams/components/team-card";
 import type { Route } from "./+types/home-page";
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
+import { getProductByDateRange } from "~/features/products/queries";
+import { DateTime } from "luxon";
 
 export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
@@ -19,7 +17,16 @@ export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   ];
 };
 
-export default function HomePage() {
+export const loader = async () => {
+  const products = await getProductByDateRange({
+    startDate: DateTime.now().startOf("day"),
+    endDate: DateTime.now().endOf("day"),
+    limit: 7,
+  });
+  return { products };
+};
+
+export default function HomePage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-40">
       <div className="grid grid-cols-3 gap-4">
@@ -34,15 +41,15 @@ export default function HomePage() {
             <Link to="/products/leaderboards">Explore all products &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.products.map((product, index) => (
           <ProductCard
-            key={index}
-            id={`productId-${index}`}
-            name="Product Name"
-            description="Product Description"
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            reviewsCount={product.reviews}
+            viewCount={product.views}
+            upvoteCount={product.upvotes}
           />
         ))}
       </div>
