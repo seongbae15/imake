@@ -7,7 +7,7 @@ select
     profiles.name as author,
     profiles.avatar as author_avatar,
     profiles.username as author_username,
-    post.upvotes
+    post.upvotes,
     topics.slug as topic_slug
 from post
 inner join topics using (topic_id)
