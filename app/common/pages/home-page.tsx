@@ -10,6 +10,7 @@ import type { Route } from "./+types/home-page";
 import { getProductByDateRange } from "~/features/products/queries";
 import { DateTime } from "luxon";
 import { getPosts } from "~/features/community/queries";
+import { getGptIdeas } from "~/features/ideas/queries";
 export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
     { title: "Home | iMake" },
@@ -28,7 +29,8 @@ export const loader = async () => {
     limit: 7,
     sorting: "newest",
   });
-  return { products, posts };
+  const ideas = await getGptIdeas({ limit: 7 });
+  return { products, posts, ideas };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -95,15 +97,15 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
             <Link to="/ideas">Explore all ideas &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.ideas.map((idea) => (
           <IdeaCard
-            key={index}
-            id="ideaId"
-            title="A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business."
-            views={123}
-            timeAgo="12 hours ago"
-            likes={123}
-            claimed={index % 2 === 0}
+            key={idea.gpt_idea_id}
+            id={idea.gpt_idea_id}
+            title={idea.idea}
+            views={idea.views}
+            timeAgo={idea.created_at}
+            likes={idea.likes}
+            claimed={idea.is_claimed}
           />
         ))}
       </div>
