@@ -64,6 +64,13 @@
       "when": 1747810112336,
       "tag": "0008_flaky_blackheart",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1748009531372,
+      "tag": "0009_purple_silver_fox",
+      "breakpoints": true
     }
   ]
 }
