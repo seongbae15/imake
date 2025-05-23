@@ -11,6 +11,8 @@ import { getProductByDateRange } from "~/features/products/queries";
 import { DateTime } from "luxon";
 import { getPosts } from "~/features/community/queries";
 import { getGptIdeas } from "~/features/ideas/queries";
+import { getJobs } from "~/features/jobs/queries";
+
 export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
     { title: "Home | iMake" },
@@ -30,7 +32,10 @@ export const loader = async () => {
     sorting: "newest",
   });
   const ideas = await getGptIdeas({ limit: 7 });
-  return { products, posts, ideas };
+
+  const jobs = await getJobs({ limit: 11 });
+
+  return { products, posts, ideas, jobs };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -121,18 +126,18 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
             <Link to="/jobs">Explore all jobs &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.jobs.map((job) => (
           <JobCard
-            key={index}
-            id="jobId"
-            companyName="Tesla"
-            companyLogo="https://github.com/teslamotors.png"
-            title="Software Engineer"
-            timeAgo="12 hours ago"
-            employmentType="Full Time"
-            locationType="Remote"
-            salaryRange="$100,000 - $120,000"
-            location="San Francisco, CA"
+            key={job.job_id}
+            id={job.job_id}
+            companyName={job.company_name}
+            companyLogo={job.company_logo}
+            title={job.position}
+            timeAgo={job.created_at}
+            employmentType={job.job_type}
+            locationType={job.location}
+            salaryRange={job.salary_range}
+            location={job.company_location}
           />
         ))}
       </div>
