@@ -12,6 +12,7 @@ import { DateTime } from "luxon";
 import { getPosts } from "~/features/community/queries";
 import { getGptIdeas } from "~/features/ideas/queries";
 import { getJobs } from "~/features/jobs/queries";
+import { getTeams } from "~/features/teams/queries";
 
 export const meta: MetaFunction<Route.MetaArgs> = ({ data }) => {
   return [
@@ -35,7 +36,9 @@ export const loader = async () => {
 
   const jobs = await getJobs({ limit: 11 });
 
-  return { products, posts, ideas, jobs };
+  const teams = await getTeams({ limit: 7 });
+
+  return { products, posts, ideas, jobs, teams };
 };
 
 export default function HomePage({ loaderData }: Route.ComponentProps) {
@@ -155,15 +158,14 @@ export default function HomePage({ loaderData }: Route.ComponentProps) {
             </Link>
           </Button>
         </div>
-        {Array.from({ length: 6 }).map((_, index) => (
+        {loaderData.teams.map((team) => (
           <TeamCard
-            key={index}
-            id={`teamId-${index}`}
-            username="seongbae"
-            avatarUrl="https://github.com/seongbae15.png"
-            avatarFallback="SB"
-            roles={["AI Engineer", "Backend Engineer", "Product Manager"]}
-            projectDescription="a new interactive media platform"
+            key={team.team_id}
+            id={team.team_id}
+            username={team.team_leader.username}
+            avatarUrl={team.team_leader.avatar}
+            roles={team.roles.split(",")}
+            projectDescription={team.product_description}
           />
         ))}
       </div>
