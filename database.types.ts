@@ -143,7 +143,7 @@ export type Database = {
           apply_url: string
           benefits: string
           company_location: string
-          company_log: string
+          company_logo: string
           company_name: string
           created_at: string
           job_id: number
@@ -161,7 +161,7 @@ export type Database = {
           apply_url: string
           benefits: string
           company_location: string
-          company_log: string
+          company_logo: string
           company_name: string
           created_at?: string
           job_id?: never
@@ -179,7 +179,7 @@ export type Database = {
           apply_url?: string
           benefits?: string
           company_location?: string
-          company_log?: string
+          company_logo?: string
           company_name?: string
           created_at?: string
           job_id?: never

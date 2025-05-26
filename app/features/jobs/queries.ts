@@ -1,4 +1,5 @@
 import client from "~/supa-client";
+import { LOCATION_TYPES, JOB_TYPES, SALARY_RANGE } from "./constants";
 
 export const getJobs = async ({
   limit,
@@ -7,9 +8,9 @@ export const getJobs = async ({
   salary,
 }: {
   limit: number;
-  location?: string;
-  type?: string;
-  salary?: string;
+  location?: (typeof LOCATION_TYPES)[number]["value"];
+  type?: (typeof JOB_TYPES)[number]["value"];
+  salary?: (typeof SALARY_RANGE)[number];
 }) => {
   const baseQuery = client
     .from("jobs")
