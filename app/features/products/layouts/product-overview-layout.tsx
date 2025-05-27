@@ -51,7 +51,7 @@ export default function ProductOverviewPage({
                 ))}
               </div>
               <span className="text-muted-foreground">
-                {loaderData.product.reviews}
+                {loaderData.product.reviews} reviews
               </span>
             </div>
           </div>
@@ -97,6 +97,7 @@ export default function ProductOverviewPage({
             product_id: loaderData.product.product_id,
             description: loaderData.product.description,
             how_it_works: loaderData.product.how_it_works,
+            review_count: loaderData.product.reviews,
           }}
         />
       </div>
