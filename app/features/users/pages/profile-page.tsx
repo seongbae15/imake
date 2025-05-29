@@ -1,10 +1,6 @@
 import type { Route } from "./+types/profile-page";
 import { useOutletContext } from "react-router";
 
-export const meta: Route.MetaFunction = () => {
-  return [{ title: "Profile | iMake" }];
-};
-
 function ProfilePage() {
   const { headline, bio } = useOutletContext<{
     headline: string;

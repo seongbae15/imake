@@ -19,6 +19,10 @@ import { cn } from "~/lib/utils";
 import type { Route } from "./+types/profile-layout";
 import { getUserProfile } from "../queries";
 
+export const meta: Route.MetaFunction = ({ data }) => {
+  return [{ title: `${data.user.name}| imake` }];
+};
+
 export const loader = async ({
   params,
 }: Route.LoaderArgs & { params: { username: string } }) => {
