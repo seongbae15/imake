@@ -8,9 +8,10 @@ import {
 } from "../../../common/components/ui/card";
 import { Button } from "../../../common/components/ui/button";
 import { Badge } from "../../../common/components/ui/badge";
+import { DateTime } from "luxon";
 
 interface JobCardProps {
-  id: string;
+  id: number;
   companyName: string;
   companyLogo: string;
   title: string;
@@ -44,14 +45,18 @@ export function JobCard({
             />
             <div className="space-x-2">
               <span className="text-accent-foreground">{companyName}</span>
-              <span className="text-sm text-muted-foreground">{timeAgo}</span>
+              <span className="text-sm text-muted-foreground">
+                {DateTime.fromISO(timeAgo).toRelative()}
+              </span>
             </div>
           </div>
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Badge variant="outline">{employmentType}</Badge>
-          <Badge variant="outline" className="ml-2">
+          <Badge variant="outline" className="capitalize">
+            {employmentType}
+          </Badge>
+          <Badge variant="outline" className="capitalize">
             {locationType}
           </Badge>
         </CardContent>

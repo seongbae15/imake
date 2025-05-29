@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/common/components/ui/card";
-import { Car } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -16,28 +15,34 @@ import { Badge } from "~/common/components/ui/badge";
 import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import { Button } from "~/common/components/ui/button";
+import { getTeamById } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Team Details | iMake" }];
 };
-export default function TeamPage() {
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const team = await getTeamById(params.teamId);
+  return { team };
+};
+export default function TeamPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-20">
-      <Hero title="Join Seongbae's team" />
+      <Hero title={`Join ${loaderData.team.team_leader.username}'s team`} />
       <div className="grid grid-cols-6 gap-40 items-start">
         <div className="col-span-4 grid grid-cols-4 gap-5">
           {[
-            { title: "Product name", value: "Doggie Social" },
-            { title: "Stage", value: "MVP" },
-            { title: "Team size", value: 3 },
-            { title: "Available equity", value: 50 },
+            { title: "Product name", value: loaderData.team.product_name },
+            { title: "Stage", value: loaderData.team.product_stage },
+            { title: "Team size", value: loaderData.team.team_size },
+            { title: "Available equity", value: loaderData.team.equity_split },
           ].map((item) => (
             <Card key={item.title}>
               <CardHeader>
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {item.title}
                 </CardTitle>
-                <CardContent className="p-0 font-bold text-2xl">
+                <CardContent className="p-0 font-bold text-2xl capitalize">
                   <p>{item.value}</p>
                 </CardContent>
               </CardHeader>
@@ -50,13 +55,7 @@ export default function TeamPage() {
               </CardTitle>
               <CardContent className="p-0 font-bold text-2xl">
                 <ul className="text-lg list-disc list-inside">
-                  {[
-                    "React Developer",
-                    "Flutter Developer",
-                    "Backend Developer",
-                    "Designer",
-                    "Product Manager",
-                  ].map((item) => (
+                  {loaderData.team.roles.split(",").map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
@@ -69,11 +68,7 @@ export default function TeamPage() {
                 Idea description
               </CardTitle>
               <CardContent className="p-0 font-medium text-xl">
-                <p>
-                  Doggie Social is a social media platform for dog lovers. It
-                  allows dogs to connect with each other and share their
-                  experiences.
-                </p>
+                <p>{loaderData.team.product_description}</p>
               </CardContent>
             </CardHeader>
           </Card>
@@ -81,12 +76,21 @@ export default function TeamPage() {
         <aside className="col-span-2 space-y-5 border rounded-lg p-6 shadow-sm">
           <div className="flex gap-5">
             <Avatar className="size-14">
-              <AvatarFallback>N</AvatarFallback>
-              <AvatarImage src="https://github.com/seongbae15.png" />
+              <AvatarFallback>
+                {" "}
+                {loaderData.team.team_leader.username[0]}
+              </AvatarFallback>
+              {loaderData.team.team_leader.avatar ? (
+                <AvatarImage src={loaderData.team.team_leader.avatar} />
+              ) : null}
             </Avatar>
             <div className="flex flex-col">
-              <h4 className="text-lg font-medium">Seongbae</h4>
-              <Badge variant={"secondary"}>Entrepreneur</Badge>
+              <h4 className="text-lg font-medium">
+                {loaderData.team.team_leader.username}
+              </h4>
+              <Badge variant={"secondary"}>
+                {loaderData.team.team_leader.role}
+              </Badge>
             </div>
           </div>
           <Form className="space-y-5">
