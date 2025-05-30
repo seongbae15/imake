@@ -16,13 +16,15 @@ import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import { Button } from "~/common/components/ui/button";
 import { getTeamById } from "../queries";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Team Details | iMake" }];
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const team = await getTeamById(params.teamId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const team = await getTeamById(client, params.teamId);
   return { team };
 };
 export default function TeamPage({ loaderData }: Route.ComponentProps) {

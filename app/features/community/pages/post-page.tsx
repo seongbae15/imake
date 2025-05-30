@@ -19,14 +19,16 @@ import { Reply } from "../components/reply";
 import { Badge } from "~/common/components/ui/badge";
 import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = ({ params }) => {
   return [{ title: `${params.postId} | iMake` }];
 };
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const post = await getPostById(params.postId);
-  const replies = await getReplies(params.postId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const post = await getPostById(client, params.postId);
+  const replies = await getReplies(client, params.postId);
   return { post, replies };
 };
 
