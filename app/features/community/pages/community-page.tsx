@@ -60,7 +60,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export const clientLoader = async ({
   serverLoader,
-}: Route.ClientLoaderArgs) => {};
+}: Route.ClientLoaderArgs) => {
+  return serverLoader();
+};
 
 export default function CommunityPage({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
