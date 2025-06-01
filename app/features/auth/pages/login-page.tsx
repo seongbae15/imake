@@ -24,7 +24,6 @@ const formSchema = z.object({
 });
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  await new Promise((resolve) => setTimeout(resolve, 4000));
   const formData = await request.formData();
   const { success, data, error } = formSchema.safeParse(
     Object.fromEntries(formData)
@@ -53,7 +52,8 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
 export default function LoginPage({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
+  const isSubmitting =
+    navigation.state === "submitting" || navigation.state === "loading";
   return (
     <div className="flex flex-col relative items-center justify-center h-full">
       <Button variant={"ghost"} asChild className="absolute right-8 top-8">

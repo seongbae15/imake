@@ -272,7 +272,7 @@ export default function Navigation({
             <Link to="/auth/login">Log In</Link>
           </Button>
           <Button asChild>
-            <Link to="/auth/signup">Join</Link>
+            <Link to="/auth/join">Join</Link>
           </Button>
         </div>
       )}
