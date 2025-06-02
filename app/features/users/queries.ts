@@ -62,3 +62,25 @@ export const getUserPosts = async (
   }
   return data;
 };
+
+export const getUserById = async (
+  client: SupabaseClient<Database>,
+  { id }: { id: string }
+) => {
+  const { data, error } = await client
+    .from("profiles")
+    .select(
+      `
+      profile_id,
+      name,
+      username,
+      avatar
+      `
+    )
+    .eq("profile_id", id)
+    .single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
