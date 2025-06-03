@@ -6,7 +6,7 @@ import {
   BreadcrumbSeparator,
 } from "~/common/components/ui/breadcrumb";
 import type { Route } from "./+types/post-page";
-import { Form, Link } from "react-router";
+import { data, Form, Link } from "react-router";
 import { Button } from "~/common/components/ui/button";
 import { ChevronUpIcon, DotIcon } from "lucide-react";
 import {
@@ -21,8 +21,8 @@ import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
 import { makeSSRClient } from "~/supa-client";
 
-export const meta: Route.MetaFunction = ({ params }) => {
-  return [{ title: `${params.postId} | iMake` }];
+export const meta: Route.MetaFunction = ({ data }) => {
+  return [{ title: `${data.post.title} on ${data.post.toptic_name} | iMake` }];
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -73,9 +73,9 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                   <DotIcon className="size-5" />
                   <span>
                     {loaderData.post.created_at
-                      ? DateTime.fromISO(
-                          loaderData.post.created_at
-                        ).toRelative()
+                      ? DateTime.fromISO(loaderData.post.created_at, {
+                          zone: "utc",
+                        }).toRelative({ unit: "hours" })
                       : null}
                   </span>
                   <DotIcon className="size-5" />
@@ -145,9 +145,9 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
             <span>
               🎂 Joined{" "}
               {loaderData.post.author_created_at
-                ? DateTime.fromISO(
-                    loaderData.post.author_created_at
-                  ).toRelative()
+                ? DateTime.fromISO(loaderData.post.author_created_at, {
+                    zone: "utc",
+                  }).toRelative({ unit: "hours" })
                 : ""}{" "}
               ago
             </span>
