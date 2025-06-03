@@ -12,6 +12,7 @@ import CreateReviewDialog from "../components/create-review-dialog";
 import { useOutletContext } from "react-router";
 import type { Route } from "./+types/product-reviews-page";
 import { getReviews } from "../queries";
+import { makeSSRClient } from "~/supa-client";
 
 export function meta() {
   return [
@@ -20,8 +21,9 @@ export function meta() {
   ];
 }
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const reviews = await getReviews(Number(params.productId));
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const reviews = await getReviews(client, Number(params.productId));
   return { reviews };
 };
 
@@ -46,9 +48,9 @@ export default function ProductReviewsPage({
           {loaderData.reviews.map((review) => (
             <ReviewCard
               author={{
-                name: review.user.username,
-                avatarUrl: review.user.avatar,
-                avatarFallback: review.user.username[0],
+                name: review.user!.username,
+                avatarUrl: review.user!.avatar,
+                avatarFallback: review.user!.username[0],
               }}
               rating={review.rating}
               content={review.review}

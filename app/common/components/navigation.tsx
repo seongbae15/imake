@@ -145,10 +145,16 @@ export default function Navigation({
   isLoggedIn,
   hasNotifications,
   hasMessages,
+  username,
+  avatar,
+  name,
 }: {
   isLoggedIn: boolean;
   hasNotifications: boolean;
   hasMessages: boolean;
+  username?: string;
+  avatar?: string | null;
+  name?: string;
 }) {
   return (
     <nav className="flex px-20 h-16 items-center justify-between backdrop-blur fixed top-0 left-0 right-0 z-50 bg-background/50">
@@ -227,14 +233,19 @@ export default function Navigation({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar>
-                <AvatarImage src="https://github.com/seongbae15.png" />
-                <AvatarFallback>SB</AvatarFallback>
+                {avatar ? (
+                  <AvatarImage className="object-cover" src={avatar} />
+                ) : (
+                  <AvatarFallback>{name?.[0]}</AvatarFallback>
+                )}
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-36">
               <DropdownMenuLabel className="flex flex-col">
-                <span className="font-medium">Seongbae</span>
-                <span className="text-xs text-muted-foreground">@username</span>
+                <span className="font-medium">{name}</span>
+                <span className="text-xs text-muted-foreground">
+                  @{username}
+                </span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
@@ -272,7 +283,7 @@ export default function Navigation({
             <Link to="/auth/login">Log In</Link>
           </Button>
           <Button asChild>
-            <Link to="/auth/signup">Join</Link>
+            <Link to="/auth/join">Join</Link>
           </Button>
         </div>
       )}
