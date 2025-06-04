@@ -127,7 +127,8 @@ export const getReplies = async (
       ${replyQuery}
     )`
     )
-    .eq("post_id", Number(postId));
+    .eq("post_id", Number(postId))
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return data;
 };
