@@ -29,7 +29,7 @@ export default function ProductOverviewPage({
     <div className="space-y-10">
       <div className="flex justify-between">
         <div className="flex gap-10">
-          <div className="size-40 rounded-xl shadow-xl bg-primary/50">
+          <div className="size-40 rounded-xl shadow-xl bg-primary/50 overflow-hidden">
             <img
               src={loaderData.product.icon}
               alt={loaderData.product.name}

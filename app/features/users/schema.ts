@@ -32,7 +32,7 @@ export const profiles = pgTable("profiles", {
   username: text().notNull(),
   headline: text(),
   bio: text(),
-  role: roles().default("developer"),
+  role: roles().default("developer").notNull(),
   stats: jsonb().$type<{ followers: number; following: number }>(),
   views: jsonb(),
   created_at: timestamp().notNull().defaultNow(),

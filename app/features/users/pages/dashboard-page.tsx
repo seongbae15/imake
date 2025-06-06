@@ -12,9 +12,25 @@ import {
   type ChartConfig,
 } from "~/common/components/ui/chart";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { makeSSRClient } from "~/supa-client";
+import { getLoggedInUserId } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Dashboard | iMake" }];
+};
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client } = await makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const { data, error } = await client.rpc("get_dashboard_stats", {
+    user_id: userId,
+  });
+  if (error) {
+    throw error;
+  }
+  return {
+    chartData: data,
+  };
 };
 
 const chartConfig = {
@@ -24,16 +40,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const chartData = [
-  { month: "Janurary", views: 186 },
-  { month: "Feburary", views: 305 },
-  { month: "March", views: 237 },
-  { month: "April", views: 73 },
-  { month: "May", views: 209 },
-  { month: "June", views: 214 },
-];
-
-function DashboardPage() {
+function DashboardPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
@@ -45,7 +52,7 @@ function DashboardPage() {
           <ChartContainer config={chartConfig}>
             <LineChart
               accessibilityLayer
-              data={chartData}
+              data={loaderData.chartData}
               margin={{ left: 12, right: 12 }}
             >
               <CartesianGrid vertical={false} />
@@ -54,7 +61,7 @@ function DashboardPage() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
+                padding={{ left: 15, right: 15 }}
               />
               <Line
                 dataKey={"views"}

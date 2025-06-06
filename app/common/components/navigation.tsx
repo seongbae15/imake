@@ -115,7 +115,7 @@ const menus = [
       {
         name: "Craete a Post",
         description: "Create a post in our community",
-        to: "/community/create",
+        to: "/community/submit",
       },
     ],
   },
@@ -133,7 +133,7 @@ const menus = [
         to: "/teams/",
       },
       {
-        name: "Create a Tema",
+        name: "Create a Team",
         description: "Create a team in our community",
         to: "/teams/submit",
       },
