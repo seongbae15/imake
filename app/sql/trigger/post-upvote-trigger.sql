@@ -5,7 +5,7 @@ security DEFINER
 set search_path = ''
 as $$
 begin
-    update public.post set upvotes = upvotes + 1 where post_id = NEW.post_id;
+    update public.posts set upvotes = upvotes + 1 where post_id = NEW.post_id;
     return new;
 end;
 $$;
@@ -21,7 +21,7 @@ security DEFINER
 set search_path = ''
 as $$
 begin
-    update public.post set upvotes = upvotes - 1 where post_id = OLD.post_id;
+    update public.posts set upvotes = upvotes - 1 where post_id = OLD.post_id;
     return OLD;
 end;
 $$;
