@@ -133,15 +133,30 @@ export const getNotifications = async (
     post:posts!post_id(
       post_id,
       title
-    ).
+    ),
     seen,
     created_at
     `
     )
-    .eq("target_id", userId);
-  console.log(data);
+    .eq("target_id", userId)
+    .order("created_at", { ascending: false });
   if (error) {
     throw error;
   }
   return data;
+};
+
+export const countNotifications = async (
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) => {
+  const { count, error } = await client
+    .from("notifications")
+    .select("*", { count: "exact", head: true })
+    .eq("seen", false)
+    .eq("target_id", userId);
+  if (error) {
+    throw error;
+  }
+  return count ?? 0;
 };
