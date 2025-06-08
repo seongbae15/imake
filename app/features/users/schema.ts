@@ -11,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { posts } from "../community/schema";
 import { products } from "../products/schema";
+import { boolean } from "drizzle-orm/gel-core";
 
 const users = pgSchema("auth").table("users", {
   id: uuid().primaryKey(),
@@ -40,12 +41,16 @@ export const profiles = pgTable("profiles", {
 });
 
 export const follows = pgTable("follows", {
-  follower_id: uuid().references(() => profiles.profile_id, {
-    onDelete: "cascade",
-  }),
-  following_id: uuid().references(() => profiles.profile_id, {
-    onDelete: "cascade",
-  }),
+  follower_id: uuid()
+    .references(() => profiles.profile_id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  following_id: uuid()
+    .references(() => profiles.profile_id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
   created_at: timestamp().notNull().defaultNow(),
 });
 
@@ -53,7 +58,6 @@ export const notificationType = pgEnum("notification_type", [
   "follow",
   "review",
   "reply",
-  "mention",
 ]);
 
 export const notifications = pgTable("notifications", {
@@ -74,6 +78,7 @@ export const notifications = pgTable("notifications", {
       onDelete: "cascade",
     })
     .notNull(),
+  seen: boolean().default(false).notNull(),
   type: notificationType().notNull(),
   created_at: timestamp().notNull().defaultNow(),
 });

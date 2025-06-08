@@ -16,7 +16,7 @@ export const topics = pgTable("topics", {
   created_at: timestamp().notNull().defaultNow(),
 });
 
-export const posts = pgTable("posts", {
+export const posts = pgTable("post", {
   post_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   title: text().notNull(),
   content: text().notNull(),

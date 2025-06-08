@@ -15,7 +15,7 @@ export const createProductReview = async (
   }
 ) => {
   const { error } = await client.from("reviews").insert({
-    product_id: Number(productId),
+    product_id: +productId,
     review,
     rating,
     profile_id: userId,
