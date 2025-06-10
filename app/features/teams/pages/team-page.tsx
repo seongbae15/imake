@@ -80,28 +80,32 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
             <Avatar className="size-14">
               <AvatarFallback>
                 {" "}
-                {loaderData.team.team_leader.username[0]}
+                {loaderData.team.team_leader.name[0]}
               </AvatarFallback>
               {loaderData.team.team_leader.avatar ? (
                 <AvatarImage src={loaderData.team.team_leader.avatar} />
               ) : null}
             </Avatar>
-            <div className="flex flex-col">
+            <div className="flex flex-col items-start">
               <h4 className="text-lg font-medium">
-                {loaderData.team.team_leader.username}
+                {loaderData.team.team_leader.name}
               </h4>
               <Badge variant={"secondary"}>
                 {loaderData.team.team_leader.role}
               </Badge>
             </div>
           </div>
-          <Form className="space-y-5">
+          <Form
+            className="space-y-5"
+            method="post"
+            action={`/users/${loaderData.team.team_leader.username}/messages`}
+          >
             <InputPair
               label="Introduce yourself"
               description="Tell us about yourself"
-              name="introduction"
+              name="content"
               type="text"
-              id="introduction"
+              id="content"
               required
               textArea
               placeholder="i.e, I'm ML Engineer with 2 years of experience"
