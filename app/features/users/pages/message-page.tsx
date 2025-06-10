@@ -11,18 +11,22 @@ import {
   AvatarImage,
 } from "~/common/components/ui/avatar";
 import { MessageBubble } from "../components/message-bubble";
-import { Form, useOutletContext } from "react-router";
+import {
+  Form,
+  useOutletContext,
+  type ShouldRevalidateFunctionArgs,
+} from "react-router";
 import { Textarea } from "~/common/components/ui/textarea";
 import { Button } from "~/common/components/ui/button";
 import { SendIcon } from "lucide-react";
-import { makeSSRClient } from "~/supa-client";
+import { browserClient, makeSSRClient, type Database } from "~/supa-client";
 import {
   getLoggedInUserId,
   getMessagesByMessagesRoomId,
   getRoomsParticipant,
   sendMessageToRoom,
 } from "../queries";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Message | iMake" }];
@@ -35,13 +39,13 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
     messageRoomId: params.messageRoomId,
     userId,
   });
-  const participants = await getRoomsParticipant(client, {
+  const participant = await getRoomsParticipant(client, {
     messageRoomId: params.messageRoomId,
     userId,
   });
   return {
     messages,
-    participants,
+    participant,
   };
 };
 
@@ -61,39 +65,74 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 };
 
 function MessagePage({ loaderData, actionData }: Route.ComponentProps) {
-  const { userId } = useOutletContext<{ userId: string }>();
+  const [messages, setMessages] = useState(loaderData.messages);
+  const { userId, name, avatar } = useOutletContext<{
+    userId: string;
+    name: string;
+    avatar: string;
+  }>();
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (actionData?.ok) {
       formRef.current?.reset();
     }
   }, [actionData]);
+  useEffect(() => {
+    const changes = browserClient
+      .channel(`room:${userId}-${loaderData.participants?.profile?.profile_id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+        },
+        (payload) => {
+          setMessages((prev) => [
+            ...prev,
+            payload.new as Database["public"]["Tables"]["messages"]["Row"],
+          ]);
+        }
+      )
+      .subscribe();
+    return () => {
+      changes.unsubscribe();
+    };
+  }, []);
   return (
     <div className="h-full flex flex-col justify-between">
       <Card>
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="size-14">
-            <AvatarImage src={loaderData.participants?.avatar ?? ""} />"
+            <AvatarImage src={loaderData.participant?.profile?.avatar ?? ""} />"
             <AvatarFallback>
-              {loaderData.participants?.profile?.name.charAt(0) ?? ""}
+              {loaderData.participant?.profile?.name.charAt(0) ?? ""}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0">
             <CardTitle className="text-xl">
-              {loaderData.participants?.name ?? ""}
+              {loaderData.participant?.profile?.name ?? ""}
             </CardTitle>
             <CardDescription>2 days ago</CardDescription>
           </div>
         </CardHeader>
       </Card>
       <div className="py-10 overflow-y-scroll flex flex-col justify-start h-full space-y-4">
-        {loaderData.messages.map((message) => (
+        {messages.map((message) => (
           <MessageBubble
             key={message.message_id}
-            avatarUrl={message.sender?.avatar ?? ""}
-            avatarFallback={message.sender?.name.charAt(0) ?? ""}
+            avatarUrl={
+              message.send_id === userId
+                ? avatar
+                : loaderData.participant?.profile?.avatar ?? ""
+            }
+            avatarFallback={
+              message.send_id === userId
+                ? name.charAt(0)
+                : loaderData.participant?.profile.name.charAt(0) ?? ""
+            }
             content={message.content}
-            isCurrentUser={message.sender?.profile_id === userId}
+            isCurrentUser={message.send_id === userId}
           />
         ))}
       </div>
@@ -122,3 +161,5 @@ function MessagePage({ loaderData, actionData }: Route.ComponentProps) {
 }
 
 export default MessagePage;
+
+export const shouldRevalidate = () => false;
