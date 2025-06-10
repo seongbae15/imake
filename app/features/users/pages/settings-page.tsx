@@ -47,7 +47,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
           contentType: avatar.type,
           upsert: false,
         });
-      console.log(error);
       if (error) {
         return { formErrors: { avatar: ["Failed to upload avatar"] } };
       }
