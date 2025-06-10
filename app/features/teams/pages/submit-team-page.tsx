@@ -32,7 +32,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const { client } = makeSSRClient(request);
   const userId = await getLoggedInUserId(client);
   const formData = await request.formData();
-  console.log(formData);
   const { success, data, error } = formSchema.safeParse(
     Object.fromEntries(formData)
   );
