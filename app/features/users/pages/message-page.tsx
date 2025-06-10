@@ -18,10 +18,11 @@ import { SendIcon } from "lucide-react";
 import { makeSSRClient } from "~/supa-client";
 import {
   getLoggedInUserId,
-  getMessages,
   getMessagesByMessagesRoomId,
   getRoomsParticipant,
+  sendMessageToRoom,
 } from "../queries";
+import { useEffect, useRef } from "react";
 
 export const meta: Route.MetaFunction = () => {
   return [{ title: "Message | iMake" }];
@@ -44,8 +45,29 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   };
 };
 
-function MessagePage({ loaderData }: Route.ComponentProps) {
+export const action = async ({ request, params }: Route.ActionArgs) => {
+  const { client } = await makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const formData = await request.formData();
+  const message = formData.get("message");
+  await sendMessageToRoom(client, {
+    messageRoomId: params.messageRoomId,
+    message: message as string,
+    userId,
+  });
+  return {
+    ok: true,
+  };
+};
+
+function MessagePage({ loaderData, actionData }: Route.ComponentProps) {
   const { userId } = useOutletContext<{ userId: string }>();
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (actionData?.ok) {
+      formRef.current?.reset();
+    }
+  }, [actionData]);
   return (
     <div className="h-full flex flex-col justify-between">
       <Card>
@@ -77,11 +99,17 @@ function MessagePage({ loaderData }: Route.ComponentProps) {
       </div>
       <Card>
         <CardHeader>
-          <Form className="relative flex justify-end itesm-center">
+          <Form
+            ref={formRef}
+            method="post"
+            className="relative flex justify-end itesm-center"
+          >
             <Textarea
               placeholder="Write a message..."
               rows={2}
               className="resize-none"
+              required
+              name="message"
             />
             <Button type="submit" size={"icon"} className="absolute right-2">
               <SendIcon className="size-4" />
