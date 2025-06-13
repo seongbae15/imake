@@ -1,6 +1,5 @@
 import { Hero } from "~/common/components/hero";
 import type { Route } from "./+types/promote-page";
-import { Form } from "react-router";
 import SelectPair from "~/common/components/select-pair";
 import { Label } from "~/common/components/ui/label";
 import { Calendar } from "~/common/components/ui/calendar";
@@ -61,7 +60,7 @@ export default function PromotePage() {
     const updateAmount = async () => {
       if (widgets.current) {
         await widgets.current.setAmount({
-          value: totalDays * 20000,
+          value: totalDays * 1000,
           currency: "KRW",
         });
       }
@@ -80,6 +79,7 @@ export default function PromotePage() {
       customerName: "seongbae",
       customerMobilePhone: "01047127086",
       metadata: {
+        product,
         promotionFrom: DateTime.fromJSDate(promotionPeriod.from).toISO(),
         promotionTo: DateTime.fromJSDate(promotionPeriod.to).toISO(),
       },
@@ -135,7 +135,7 @@ export default function PromotePage() {
           <div id="toss-payment-agreement"></div>
           <Button disabled={totalDays === 0} className="w-full">
             Checkout (
-            {(totalDays * 20000).toLocaleString("ko-KR", {
+            {(totalDays * 1000).toLocaleString("ko-KR", {
               style: "currency",
               currency: "KRW",
             })}
