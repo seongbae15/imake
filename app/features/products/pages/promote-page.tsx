@@ -12,6 +12,7 @@ import {
   loadTossPayments,
   type TossPaymentsWidgets,
 } from "@tosspayments/tosspayments-sdk";
+import { boolean } from "drizzle-orm/gel-core";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -32,9 +33,14 @@ export default function PromotePage() {
         ).days
       : 0;
   const widgets = useRef<TossPaymentsWidgets | null>(null);
+  const initedToss = useRef<boolean>(false);
   useEffect(() => {
+    if (initedToss.current) return;
+    initedToss.current = true;
     const initToss = async () => {
-      const toss = loadTossPayments("test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm");
+      const toss = await loadTossPayments(
+        "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"
+      );
 
       widgets.current = (await toss).widgets({ customerKey: "0000000" });
       await widgets.current.setAmount({
@@ -52,22 +58,45 @@ export default function PromotePage() {
   }, []);
 
   useEffect(() => {
-    if (widgets.current) {
-      widgets.current.setAmount({
-        value: totalDays * 20000,
-        currency: "KRW",
-      });
-    }
+    const updateAmount = async () => {
+      if (widgets.current) {
+        await widgets.current.setAmount({
+          value: totalDays * 20000,
+          currency: "KRW",
+        });
+      }
+    };
+    updateAmount();
   }, [promotionPeriod]);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const product = formData.get("product") as string;
+    if (!product || !promotionPeriod?.to || !promotionPeriod?.from) return;
+    await widgets.current?.requestPayment({
+      orderId: crypto.randomUUID(),
+      orderName: `iMake Promotion for ${product}`,
+      customerEmail: "pseongbae@gmail.com",
+      customerName: "seongbae",
+      customerMobilePhone: "01047127086",
+      metadata: {
+        promotionFrom: DateTime.fromJSDate(promotionPeriod.from).toISO(),
+        promotionTo: DateTime.fromJSDate(promotionPeriod.to).toISO(),
+      },
+      successUrl: `${window.location.href}/success`,
+      failUrl: `${window.location.href}/fail`,
+    });
+  };
   return (
     <div>
       <Hero
         title="Promote Your Project"
         description="Boost your product's visibility."
       />
-      <div className="grid grid-cols-6 gap-10">
-        <Form className="col-span-3 mx-auto w-1/2 flex flex-col gap-10 items-start">
+      <form onSubmit={handleSubmit} className="grid grid-cols-6 gap-10">
+        <div className="col-span-3 mx-auto w-1/2 flex flex-col gap-10 items-start">
           <SelectPair
+            required
             label="Select a product"
             description="Select the product you want to promote."
             name="product"
@@ -78,11 +107,11 @@ export default function PromotePage() {
                 value: "ai-dark-mode-maker",
               },
               {
-                label: "AI Dark Mode Maker",
+                label: "AI Dark Mode Maker-1",
                 value: "ai-dark-mode-maker-1",
               },
               {
-                label: "AI Dark Mode Maker",
+                label: "AI Dark Mode Maker-2",
                 value: "ai-dark-mode-maker-2",
               },
             ]}
@@ -100,7 +129,7 @@ export default function PromotePage() {
               disabled={{ before: new Date() }}
             />
           </div>
-        </Form>
+        </div>
         <aside className="col-span-3 px-20 flex flex-col items-center">
           <div id="toss-payment-method" className="w-full"></div>
           <div id="toss-payment-agreement"></div>
@@ -113,7 +142,7 @@ export default function PromotePage() {
             )
           </Button>
         </aside>
-      </div>
+      </form>
     </div>
   );
 }
